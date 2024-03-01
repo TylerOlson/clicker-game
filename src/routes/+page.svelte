@@ -1,2 +1,16 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script lang="ts">
+	import { Game } from '$lib/game'
+
+	let game = new Game()
+	let gameMoney = 0
+
+	game.money.subscribe((value) => {
+		gameMoney = value
+	})
+	function click() {
+		game.click()
+	}
+</script>
+
+<p>Balance: {gameMoney}</p>
+<button on:click={click}>Click!</button>

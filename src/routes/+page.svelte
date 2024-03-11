@@ -21,13 +21,13 @@
 	}, game.getTickSpeed())
 </script>
 
-<div class="flex h-screen justify-evenly bg-slate-100 py-24">
-	<div class="my-10">
-		<h1 class="text-4xl text-gray-500">&lt;HTML/&gt; clicker.</h1>
+<div class="flex flex-col justify-evenly p-16 md:flex-row md:px-0">
+	<div class="">
+		<h1 class="text-4xl text-gray-500 dark:text-slate-100">&lt;HTML/&gt; clicker.</h1>
 
-		<p class="mt-1 text-gray-500">Balance: ${game.getMoney()}</p>
+		<p class="mt-2 text-gray-500 dark:text-slate-100">Balance: ${game.getMoney()}</p>
 		<button
-			class="relative left-1/2 mt-24 size-28 -translate-x-1/2 rounded-[4em] bg-emerald-400 text-gray-100 drop-shadow-xl transition-all duration-300 ease-in-out hover:rounded-xl hover:bg-red-600"
+			class="relative left-1/2 my-16 size-28 -translate-x-1/2 rounded-[4em] bg-emerald-400 text-gray-100 drop-shadow-xl transition-all duration-300 ease-in-out hover:rounded-xl hover:bg-red-600 active:bg-red-800 md:my-32"
 			on:click={click}
 		>
 			Click!

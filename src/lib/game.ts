@@ -1,61 +1,63 @@
 export class Building {
-	name: string = ''
-	mps: number = 0
+	readonly name: string = ''
+	cps: number = 0
+	baseCost: number = 0
+	amount: number = 0
 
-	constructor(name: string = 'nil', mps: number = -1) {
+	constructor(name: string, cps: number, baseCost: number) {
 		this.name = name
-		this.mps = mps
+		this.cps = cps
+		this.baseCost = baseCost
+	}
+
+	getCost(): number {
+		return Math.round(this.baseCost * 1.15 ** this.amount * 100) / 100
 	}
 }
 
 export class Game {
-	money: number = 0
-	clickAmount: number = 1
-	buildings: Building[] = []
-	buildingAmount: Map<string, number> = new Map<string, number>()
-	tickSpeed: number = 1000
+	private _money: number = 0
+	private _clickAmount: number = 1
+	private _buildings: Map<string, Building> = new Map<string, Building>()
+	private _tickSpeed: number = 1000
 
 	buyBuilding(name: string) {
-		if (this.buildingAmount.has(name)) {
-			this.buildingAmount.set(name, this.buildingAmount.get(name)! + 1) // ! means ignore undefined
+		if (this._buildings.has(name)) {
+			let b = this._buildings.get(name)!
+			if (this._money >= b.getCost()) {
+				this._money -= b.getCost()
+				b.amount++
+			}
 		}
-	}
-
-	addBuilding(name: string, mps: number) {
-		if (this.buildingAmount.has(name)) {
-			this.buyBuilding(name)
-		} else {
-			const b = new Building(name, mps)
-
-			this.buildings.push(b)
-			this.buildingAmount.set(name, 1)
-		}
-	}
-
-	getBuilding(name: string) {
-		const building = this.buildings.find((i) => i.name === name)
-
-		if (building === undefined) {
-			return new Building()
-		}
-
-		return building
 	}
 
 	gameLoop(): void {
-		if (Array.isArray(this.buildings)) {
-			this.buildings.forEach((building: Building) => {
-				this.money += building.mps * this.buildingAmount.get(building.name)!
-				console.log('hello inside')
-			})
+		for (let building of this._buildings.values()) {
+			this._money += building.cps * building.amount
 		}
 	}
 
 	click() {
-		this.money += this.clickAmount
+		this._money += this._clickAmount
+	}
+
+	getMoney(): number {
+		return Math.round(this._money * 100) / 100
+	}
+
+	getBuildings(): Map<string, Building> {
+		return this._buildings
+	}
+
+	getTickSpeed(): number {
+		return this._tickSpeed
 	}
 
 	constructor() {
-		this.addBuilding('Farm', 1)
+		this._buildings.set('<p> tag', new Building('<p> tag', 1, 1))
+		this._buildings.set('<h5> tag', new Building('<h5> tag', 2, 20))
+		this._buildings.set('<br> tag', new Building('<br> tag', 5, 50))
+
+		console.log('Created a Game object')
 	}
 }

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Game } from '$lib/game'
 	import BuildingBlock from '$lib/buildingblock.svelte'
+	import { building } from '$app/environment'
 
 	let game = new Game()
 
@@ -11,24 +12,28 @@
 
 	function buy(event: CustomEvent<string>) {
 		game.buyBuilding(event.detail)
-		console.log('added', event.detail)
 		game = game
 	}
 
 	setInterval(() => {
 		game.gameLoop()
 		game = game
-		console.log('hello')
-	}, game.tickSpeed)
+	}, game.getTickSpeed())
 </script>
 
-<p>Balance: {game.money}</p>
-<button on:click={click}>Click!</button>
-{#each game.buildings as building}
-	<BuildingBlock
-		name={building.name}
-		amount={game.buildingAmount.get(building.name)}
-		mps={game.getBuilding(building.name).mps}
-		on:buy={buy}
-	/>
-{/each}
+<div class="flex center flex-col m-16">
+	<h1 class="text-4xl text-gray-500">HTML clicker</h1>
+
+	<p>Balance: {game.getMoney()}</p>
+	<button class="bg-green-700 rounded-md px-5 py-2" on:click={click}>Click!</button>
+	{#each [...game.getBuildings().values()] as building}
+		<BuildingBlock
+			name={building.name}
+			amount={building.amount}
+			cps={building.cps}
+			cost={building.getCost()}
+			disabled={game.getMoney() < building.getCost()}
+			on:buy={buy}
+		/>
+	{/each}
+</div>

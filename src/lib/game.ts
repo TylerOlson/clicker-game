@@ -19,7 +19,7 @@ export class Building {
 
 export class Game {
 	private _money: number = 0
-	private _clickAmount: number = 10
+	private _clickAmount: number = 1
 	private _buildings: Map<string, Building> = new Map<string, Building>()
 	private _tickSpeed: number = 100
 
